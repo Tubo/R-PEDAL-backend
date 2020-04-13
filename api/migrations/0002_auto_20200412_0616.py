@@ -7,7 +7,7 @@ from ..models import Location as LocationModel
 
 def generate_locations(apps, schema_editor):
     objects = []
-    laterality = ("LEFT", "RIGHT")
+    laterality = ("L", "R")
     levels = LocationModel.level_choices
     zones = LocationModel.zone_choices
 
