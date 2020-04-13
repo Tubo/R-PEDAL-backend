@@ -21,7 +21,7 @@ env = environ.Env(DEBUG=(bool, False), ALLOWED_HOSTS=(list, []))
 
 READ_DOT_ENV_FILE = env.bool("DJANGO_READ_DOT_ENV_FILE", default=False)
 if READ_DOT_ENV_FILE:
-    env.read_env(BASE_DIR + "/.env")
+    env.read_env(BASE_DIR + "/local.env")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -44,11 +44,14 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.admin",
+    "rest_framework",
+    "corsheaders",
     "api.apps.ApiConfig",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -120,3 +123,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = "/static/"
+
+# CORS headers
+CORS_ORIGIN_WHITELIST = [
+    "https://r-pedal-form.netlify.com",
+    "http://localhost:3000",
+    "http://127.0.0.1:8000"
+]
+
