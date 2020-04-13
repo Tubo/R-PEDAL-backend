@@ -20,6 +20,3 @@ class EntryAdmin(admin.ModelAdmin):
     lesion_num.short_description = "Number of lesions"
 
 
-@admin.register(Location)
-class LocationAdmin(admin.ModelAdmin):
-    list_display = ("laterality", "level", "zone")

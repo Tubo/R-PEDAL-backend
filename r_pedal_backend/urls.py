@@ -19,7 +19,7 @@ from api.views import EntryListCreateAPIView
 
 admin.site.site_header = "R-PEDAL Project"
 admin.site.site_title = "R-PEDAL Project"
-admin.site.index_title = "Welcome to the R-PEDAL Project"
+admin.site.index_title = "Welcome to the R-PEDAL Project!"
 
 urlpatterns = [
     path("admin/", admin.site.urls),

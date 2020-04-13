@@ -35,7 +35,7 @@ test_entry_1 = {
 test_entry_2 = {
             "patient_id": "X123",
             "mri_date": "2020-04-01",
-            "psa_level": 10,
+            "psa_level": 15,
             "lesions": [],
             "ece": "NO",
             "svi": "NO",

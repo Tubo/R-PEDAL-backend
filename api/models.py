@@ -16,6 +16,9 @@ class Entry(models.Model):
     svi = models.CharField(max_length=20)
     comments = models.TextField(blank=True)
 
+    class Meta:
+        verbose_name_plural = "entries"
+
 
 class Lesion(models.Model):
     name = models.CharField(
