@@ -11,7 +11,6 @@ test_entry_1 = {
             "psa_level": 10,
             "lesions": [
                 {
-                    "name": "index",
                     "locations": ["R_mid_PZpm"],
                     "size": 10,
                     "adc": 700,
@@ -19,7 +18,6 @@ test_entry_1 = {
                     "upgraded": "PZ DCE",
                 },
                 {
-                    "name": "additional",
                     "locations": ["L_apex_PZpl", "Urethra"],
                     "size": 10,
                     "adc": 700,
@@ -42,6 +40,7 @@ test_entry_2 = {
             "comments": "",
         }
 
+
 class TestSerializers(APITestCase):
     def test_write_entry(self):
         s = EntrySerializer(data=test_entry_1)
@@ -49,8 +48,6 @@ class TestSerializers(APITestCase):
         e = s.save()
         self.assertEqual(Entry.objects.first(), e)
         self.assertEqual(Lesion.objects.count(), 2)
-        self.assertEqual(Lesion.objects.get(name="index").locations.count(), 1)
-        self.assertEqual(Lesion.objects.get(name="additional").locations.count(), 2)
         self.assertEqual(Location.objects.filter(lesion__entry=e).count(), 3)
 
 

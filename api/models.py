@@ -21,10 +21,6 @@ class Entry(models.Model):
 
 
 class Lesion(models.Model):
-    name = models.CharField(
-        choices=(("index", "Index lesion"), ("additional", "Additional lesion")),
-        max_length=10,
-    )
     entry = models.ForeignKey(Entry, on_delete=models.CASCADE, related_name="lesions")
     locations = models.ManyToManyField("Location")
     size = models.IntegerField()
