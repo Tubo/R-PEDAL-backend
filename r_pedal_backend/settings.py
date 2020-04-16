@@ -144,6 +144,7 @@ STATIC_URL = "/static/"
 # CORS headers
 CORS_ORIGIN_WHITELIST = [
     "https://r-pedal-form.netlify.com",
+    "https://r-pedal-form.netlify.app",
     "http://localhost:3000",
     "http://127.0.0.1:8000",
 ]
