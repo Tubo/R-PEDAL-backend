@@ -3,7 +3,7 @@ from .models import *
 
 
 class LesionSerializer(s.ModelSerializer):
-    locations = s.ListField(child=s.CharField(), allow_empty=False, max_length=2, write_only=True)
+    locations = s.ListField(child=s.CharField(), allow_empty=False, max_length=4, write_only=True)
     read_location = s.StringRelatedField(source="locations", many=True, read_only=True)
 
     class Meta:
