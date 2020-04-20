@@ -6,7 +6,7 @@ from .models import *
 class LesionAdmin(admin.TabularInline):
     model = Lesion
     min_num = 0
-    max_num = 4
+    max_num = 2
 
 
 @admin.register(Entry)
