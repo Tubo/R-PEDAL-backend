@@ -7,7 +7,7 @@ class Patient(models.Model):
 
 class MriEntry(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="mri_entries")
     mri_date = models.DateField()
     psa_level = models.IntegerField()
     ece = models.BooleanField()

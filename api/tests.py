@@ -1,61 +1,85 @@
 from django.test import TestCase
+from django.shortcuts import reverse
 from rest_framework.test import APITestCase
 
 from .models import *
 from .serializers import *
 
 
-test_entry_1 = {
-            "patient_id": "X123",
-            "mri_date": "2020-04-01",
-            "psa_level": 10,
-            "lesions": [
-                {
-                    "locations": ["R_mid_PZpm"],
-                    "size": 10,
-                    "adc": 700,
-                    "score": "4",
-                    "upgraded": "PZ DCE",
-                },
-                {
-                    "locations": ["L_apex_PZpl", "Urethra", "R_mid_PZpm", "what"],
-                    "size": 10,
-                    "adc": 700,
-                    "score": "3",
-                    "upgraded": "NO",
-                },
-            ],
-            "ece": "NO",
-            "svi": "NO",
-            "comments": "marked dwi artefact",
-        }
-
-test_entry_2 = {
-            "patient_id": "X123",
-            "mri_date": "2020-04-01",
-            "psa_level": 15,
-            "lesions": [],
-            "ece": "NO",
-            "svi": "NO",
-            "comments": "",
-        }
+def mri_lesion_builder(
+    location_set: int = 1,
+    size: int = 10,
+    adc: int = 500,
+    score: str = "2",
+    upgraded: str = "NO",
+):
+    locations = [
+        [],
+        ["r_mid_pzpm"],
+        ["l_apex_pzpl", "urethra"],
+        ["l_apex_pzpl", "urethra", "r_mid_pzpm"],
+        ["l_apex_pzpl", "urethra", "r_mid_pzpm", "l_vs"],
+        ["l_apex_pzpl", "urethra", "r_mid_pzpm", "this should not be here"],
+    ]
+    return {
+        "locations": locations[location_set],
+        "size": size,
+        "adc": adc,
+        "score": score,
+        "upgraded": upgraded,
+    }
 
 
-class TestSerializers(APITestCase):
-    def test_write_entry(self):
-        s = MriEntrySerializer(data=test_entry_1)
-        self.assertTrue(s.is_valid(), s.errors)
-        e = s.save()
-        self.assertEqual(MriEntry.objects.first(), e)
-        self.assertEqual(MriLesion.objects.count(), 2)
-        self.assertEqual(Location.objects.filter(lesion__entry=e).count(), 3)
+def mri_form_builder(lesions: list, date="2020-04-01", patient_id="X123"):
+    return {
+        "patient_id": patient_id,
+        "mri_date": date,
+        "psa_level": 15,
+        "lesions": lesions,
+        "ece": "NO",
+        "svi": "NO",
+        "comments": "No comments",
+    }
 
 
 class TestViews(APITestCase):
-    def test_list(self):
-        r = self.client.get("/")
-        self.assertEqual([], r.data)
+    def test_post_mri_good_form(self):
+        # A new POST request is sent to MRI api
+        self.client.post(reverse("mri-entry"), data=mri_form_builder([]), format="json")
 
-    def test_create(self):
-        r = self.client.post("/", test_entry_1, format='json')
-        self.assertEqual(MriEntry.objects.count(), 1, r.data)
+        self.assertEqual(1, Patient.objects.count(), "A new Patient should be created")
+        self.assertEqual(
+            1, MriEntry.objects.count(), "A new MRI Entry should be created"
+        )
+        self.assertEqual(
+            0, MriLesion.objects.count(), "No MRI Lesions should be created"
+        )
+
+        # Send a second POST request with the same user info
+        self.client.post(reverse("mri-entry"), data=mri_form_builder([]), format="json")
+        self.assertEqual(
+            1, Patient.objects.count(), "The patient count should still be one"
+        )
+        self.assertEqual(
+            2, MriEntry.objects.count(), "A new MRI Entry should be created (2)"
+        )
+        self.assertEqual(
+            0, MriLesion.objects.count(), "No MRI Lesions should be created"
+        )
+
+        # Send a third POST request with same user info, this time add lesion info
+        r = self.client.post(
+            reverse("mri-entry"),
+            data=mri_form_builder([mri_lesion_builder(location_set=1)]),
+            format="json",
+        )
+        self.assertEqual(
+            1, Patient.objects.count(), "The patient count should still be one"
+        )
+        self.assertEqual(3, MriEntry.objects.count(), r.data)
+        self.assertEqual(
+            1, MriLesion.objects.count(), "One new MRI Lesions should be created"
+        )
+
+    def test_post_mri_bad_form(self):
+        pass
