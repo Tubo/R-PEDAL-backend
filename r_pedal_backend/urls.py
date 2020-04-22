@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from api.views import EntryListCreateAPIView
+from api.views import MriEntryListCreateAPIView
 
 admin.site.site_header = "R-PEDAL Project"
 admin.site.site_title = "R-PEDAL Project"
@@ -23,5 +23,5 @@ admin.site.index_title = "Welcome to the R-PEDAL Project!"
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", EntryListCreateAPIView.as_view(), name="entry-view")
+    path("mri/", MriEntryListCreateAPIView.as_view(), name="mri-entry")
 ]

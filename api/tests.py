@@ -18,7 +18,7 @@ test_entry_1 = {
                     "upgraded": "PZ DCE",
                 },
                 {
-                    "locations": ["L_apex_PZpl", "Urethra"],
+                    "locations": ["L_apex_PZpl", "Urethra", "R_mid_PZpm", "what"],
                     "size": 10,
                     "adc": 700,
                     "score": "3",
@@ -43,11 +43,11 @@ test_entry_2 = {
 
 class TestSerializers(APITestCase):
     def test_write_entry(self):
-        s = EntrySerializer(data=test_entry_1)
+        s = MriEntrySerializer(data=test_entry_1)
         self.assertTrue(s.is_valid(), s.errors)
         e = s.save()
-        self.assertEqual(Entry.objects.first(), e)
-        self.assertEqual(Lesion.objects.count(), 2)
+        self.assertEqual(MriEntry.objects.first(), e)
+        self.assertEqual(MriLesion.objects.count(), 2)
         self.assertEqual(Location.objects.filter(lesion__entry=e).count(), 3)
 
 
@@ -58,4 +58,4 @@ class TestViews(APITestCase):
 
     def test_create(self):
         r = self.client.post("/", test_entry_1, format='json')
-        self.assertEqual(Entry.objects.count(), 1, r.data)
+        self.assertEqual(MriEntry.objects.count(), 1, r.data)

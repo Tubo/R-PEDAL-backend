@@ -1,9 +1,13 @@
 from django.db import models
 
 
-class Entry(models.Model):
+class Patient(models.Model):
+    patient_id = models.CharField(max_length=50, unique=True)
+
+
+class MriEntry(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
-    patient_id = models.CharField("patient ID", max_length=50)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     mri_date = models.DateField()
     psa_level = models.IntegerField()
     ece = models.BooleanField()
@@ -20,8 +24,8 @@ class Entry(models.Model):
         verbose_name_plural = "entries"
 
 
-class Lesion(models.Model):
-    entry = models.ForeignKey(Entry, on_delete=models.CASCADE, related_name="lesions")
+class MriLesion(models.Model):
+    entry = models.ForeignKey(MriEntry, on_delete=models.CASCADE, related_name="lesions")
     locations = models.ManyToManyField("Location")
     size = models.IntegerField()
     adc = models.IntegerField()

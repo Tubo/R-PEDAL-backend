@@ -2,22 +2,22 @@ from rest_framework import serializers as s
 from .models import *
 
 
-class LesionSerializer(s.ModelSerializer):
+class MriLesionSerializer(s.ModelSerializer):
     locations = s.ListField(child=s.CharField(), allow_empty=False, max_length=4, write_only=True)
-    read_location = s.StringRelatedField(source="locations", many=True, read_only=True)
 
     class Meta:
-        model = Lesion
+        model = MriLesion
         exclude = [
             "entry",
         ]
 
 
-class EntrySerializer(s.ModelSerializer):
-    lesions = LesionSerializer(many=True)
+class MriEntrySerializer(s.ModelSerializer):
+    patient_id = s.CharField()
+    lesions = MriLesionSerializer(many=True)
 
     class Meta:
-        model = Entry
+        model = MriEntry
         fields = [
             "timestamp",
             "patient_id",
@@ -32,11 +32,13 @@ class EntrySerializer(s.ModelSerializer):
         read_only_fields = ["timestamp"]
 
     def create(self, validated_data):
+        patient_data = validated_data.pop("patient_id")
         lesion_data = validated_data.pop("lesions")
-        e = Entry.objects.create(**validated_data)
+        p = Patient.objects.get_or_create(**patient_data)
+        e = MriEntry.objects.create(**validated_data, patient=p)
         for lesion in lesion_data:
             location_data = lesion.pop("locations")
             locations = map(Location.objects.get_location_from_str, location_data)
-            new_lesion = Lesion.objects.create(**lesion, entry=e)
+            new_lesion = MriLesion.objects.create(**lesion, entry=e)
             new_lesion.locations.add(*list(locations))
         return e

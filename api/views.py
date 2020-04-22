@@ -1,9 +1,9 @@
 from rest_framework.generics import ListCreateAPIView
 
-from .models import Entry
-from .serializers import EntrySerializer
+from .models import MriEntry
+from .serializers import MriEntrySerializer
 
 
-class EntryListCreateAPIView(ListCreateAPIView):
-    queryset = Entry.objects.all()
-    serializer_class = EntrySerializer
+class MriEntryListCreateAPIView(ListCreateAPIView):
+    queryset = MriEntry.objects.all()
+    serializer_class = MriEntrySerializer
