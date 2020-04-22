@@ -4,20 +4,23 @@ from django.db import models
 class Patient(models.Model):
     patient_id = models.CharField(max_length=50, unique=True)
 
+    def __str__(self):
+        return self.patient_id
+
 
 class MriEntry(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="mri_entries")
-    mri_date = models.DateField()
-    psa_level = models.IntegerField()
-    ece = models.BooleanField()
+    mri_date = models.DateField("MRI Date")
+    psa_level = models.IntegerField("PSA Level")
+    ece = models.BooleanField("ECE")
     svi_choices = (
         ("NO", "No"),
         ("LEFT", "Yes - left"),
         ("RIGHT", "Yes - right"),
         ("BILATERAL", "Yes - bilateral"),
     )
-    svi = models.CharField(max_length=20)
+    svi = models.CharField("SVI", max_length=20)
     comments = models.TextField(blank=True)
 
     class Meta:
@@ -28,7 +31,7 @@ class MriLesion(models.Model):
     entry = models.ForeignKey(MriEntry, on_delete=models.CASCADE, related_name="lesions")
     locations = models.ManyToManyField("Location")
     size = models.IntegerField()
-    adc = models.IntegerField()
+    adc = models.IntegerField("ADC")
     score_choices = (("5", "5"), ("4", "4"), ("3", "3"), ("2", "2"))
     score = models.CharField("PIRADS 2.1 score", choices=score_choices, max_length=2)
     upgraded_choice = (
