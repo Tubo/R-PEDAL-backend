@@ -13,15 +13,48 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path
-from api.views import MriEntryListCreateAPIView
+
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
+from api.views import *
 
 admin.site.site_header = "R-PEDAL Project"
 admin.site.site_title = "R-PEDAL Project"
 admin.site.index_title = "Welcome to the R-PEDAL Project!"
 
+schema_view = get_schema_view(
+    openapi.Info(
+        title="R-PEDAL API",
+        default_version="v1",
+        description="API documentation",
+        terms_of_service="https://www.google.com/policies/terms/",
+        contact=openapi.Contact(email="shi@tubo.nz"),
+        license=openapi.License(name="BSD License"),
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
+)
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("mri/", MriEntryListCreateAPIView.as_view(), name="mri-entry")
+    # App urls
+    path("mri/", MriEntryListCreateAPIView.as_view(), name="mri-entry"),
+    path("psma/", PsmaEntryListCreateAPIView.as_view(), name="psma-entry"),
+    path("pathology/", PathologyEntryListCreateAPIView.as_view(), name="pathology-entry"),
+    # Documentation urls
+    url(
+        r"^swagger(?P<format>\.json|\.yaml)$",
+        schema_view.without_ui(cache_timeout=0),
+        name="schema-json",
+    ),
+    path(
+        "swagger/",
+        schema_view.with_ui("swagger", cache_timeout=0),
+        name="schema-swagger-ui",
+    ),
+    path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
 ]
