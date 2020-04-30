@@ -62,7 +62,7 @@ class MriEntry(models.Model):
         Patient, on_delete=models.CASCADE, related_name="mri_entries"
     )
     mri_date = models.DateField("MRI date")
-    psa_level = models.IntegerField("PSA level")
+    psa_level = models.DecimalField("PSA level", max_digits=6, decimal_places=2)
     ece = models.BooleanField("ECE")
     svi_choices = (
         ("NO", "No"),
@@ -83,7 +83,7 @@ class MriLesion(models.Model):
     )
     is_index = models.BooleanField("Index lesion?")
     locations = models.ManyToManyField(PiradLocation)
-    size = models.IntegerField()
+    size = models.DecimalField(max_digits=6, decimal_places=2)
     adc = models.IntegerField("ADC")
     score_choices = (("5", "5"), ("4", "4"), ("3", "3"), ("2", "2"))
     score = models.CharField("PIRADS 2.1 score", choices=score_choices, max_length=2)
@@ -112,7 +112,7 @@ class PsmaLesion(models.Model):
     )
     is_index = models.BooleanField("Index lesion?", default=False)
     locations = models.ManyToManyField(PiradLocation)
-    suv = models.IntegerField("SUV")
+    suv = models.DecimalField("SUV", max_digits=6, decimal_places=2)
 
 
 class PathologyEntry(models.Model):
@@ -146,12 +146,13 @@ class PathologyLesion(models.Model):
             ("NONE", "No malignancy"),
         ),
     )
-    greatest_percentage = models.IntegerField(
-        "Greatest percentage of cancer", null=True
+    greatest_percentage = models.DecimalField(
+        "Greatest percentage of cancer", null=True, max_digits=5, decimal_places=2
+
     )
     positive_core = models.IntegerField("Positive core number", null=True)
     total_core = models.IntegerField("Total core number", null=True)
-    lesion_size = models.IntegerField("Lesion size", null=True)
+    lesion_size = models.DecimalField("Lesion size", null=True, max_digits=6, decimal_places=2)
     loc_side = models.CharField(
         "Side of prostate",
         max_length=10,

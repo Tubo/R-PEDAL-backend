@@ -29,7 +29,7 @@ def mri_lesion_factory():
         return {
             "is_index": True,
             "locations": locations[number],
-            "size": 40,
+            "size": 40.5,
             "adc": 700,
             "score": "5",
             "upgraded": "NO",
@@ -44,7 +44,7 @@ def mri_form_factory():
         return {
             "patient_id": patient_id,
             "mri_date": "2020-04-01",
-            "psa_level": 15,
+            "psa_level": 15.9,
             "lesions": [*lesions],
             "ece": False,
             "svi": "LEFT",
@@ -60,7 +60,7 @@ def psma_lesion_factory():
         return {
             "is_index": True,
             "locations": locations[number],
-            "suv": 100,
+            "suv": 100.5,
         }
 
     return psma_lesion
