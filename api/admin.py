@@ -12,14 +12,14 @@ class MriLesionAdmin(admin.TabularInline):
 @admin.register(MriEntry)
 class MriEntryAdmin(admin.ModelAdmin):
     list_display = (
-        "timestamp",
-        "patient_id",
+        "patient",
         "mri_date",
         "lesion_num",
         "psa_level",
         "ece",
         "svi",
         "comments",
+        "timestamp",
     )
 
     inlines = [MriLesionAdmin]
@@ -53,3 +53,4 @@ class PathologyAdmin(admin.ModelAdmin):
 
 
 admin.site.register(PiradLocation)
+admin.site.register(Patient)
