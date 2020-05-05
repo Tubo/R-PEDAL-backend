@@ -1,23 +1,6 @@
 from django.contrib import admin
-from import_export import resources
-from import_export.admin import ImportExportModelAdmin
 
 from .models import *
-
-
-class EntryResource(resources.Resource):
-    class Meta:
-        model = MriEntry
-        exclude = ("id",)
-        export_order = (
-            "timestamp",
-            "patient_id",
-            "mri_date",
-            "psa_level",
-            "ece",
-            "svi",
-            "comments",
-        )
 
 
 class MriLesionAdmin(admin.TabularInline):
@@ -27,7 +10,7 @@ class MriLesionAdmin(admin.TabularInline):
 
 
 @admin.register(MriEntry)
-class MriEntryAdmin(ImportExportModelAdmin):
+class MriEntryAdmin(admin.ModelAdmin):
     list_display = (
         "timestamp",
         "patient_id",
@@ -45,3 +28,28 @@ class MriEntryAdmin(ImportExportModelAdmin):
         return e.lesions.count()
 
     lesion_num.short_description = "Number of lesions"
+
+
+class PsmaLesionAdmin(admin.TabularInline):
+    model = PsmaLesion
+    min_num = 0
+    max_num = 2
+
+
+@admin.register(PsmaEntry)
+class PsmaEntryAdmin(admin.ModelAdmin):
+    inlines = [PsmaLesionAdmin]
+
+
+class PathologyLesionAdmin(admin.TabularInline):
+    model = PathologyLesion
+    min_num = 0
+    max_num = 2
+
+
+@admin.register(PathologyEntry)
+class PathologyAdmin(admin.ModelAdmin):
+    inlines = [PathologyLesionAdmin]
+
+
+admin.site.register(PiradLocation)

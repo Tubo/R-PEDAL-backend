@@ -55,6 +55,9 @@ class Patient(models.Model):
 class PiradLocation(models.Model):
     label = models.CharField("Location", max_length=20, choices=pirad_locations)
 
+    def __str__(self):
+        return " ".join(map(str.capitalize, self.label.split('_')))
+
 
 class MriEntry(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -74,7 +77,7 @@ class MriEntry(models.Model):
     comments = models.TextField(blank=True)
 
     class Meta:
-        verbose_name_plural = "entries"
+        verbose_name_plural = "MRI entries"
 
 
 class MriLesion(models.Model):
@@ -105,6 +108,9 @@ class PsmaEntry(models.Model):
     psma_date = models.DateField("PSMA date")
     comments = models.TextField(blank=True)
 
+    class Meta:
+        verbose_name_plural = "PSMA entries"
+
 
 class PsmaLesion(models.Model):
     entry = models.ForeignKey(
@@ -128,6 +134,8 @@ class PathologyEntry(models.Model):
     )
     comments = models.TextField(blank=True)
 
+    class Meta:
+        verbose_name_plural = "Pathology entries"
 
 class PathologyLesion(models.Model):
     entry = models.ForeignKey(
