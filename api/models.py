@@ -53,7 +53,7 @@ class Patient(models.Model):
 
 
 class PiradLocation(models.Model):
-    label = models.CharField("Location", max_length=20, choices=pirad_locations)
+    label = models.CharField("Location", max_length=20, choices=pirad_locations, unique=True)
 
     def __str__(self):
         return " ".join(map(str.capitalize, self.label.split('_')))
