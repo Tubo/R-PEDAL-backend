@@ -220,14 +220,22 @@ def test_psma_entry_serializer(psma_form_factory, psma_lesion_factory):
 
 
 def test_post_psma_entry(api_client, psma_form_factory, psma_lesion_factory):
-    lesion = psma_lesion_factory(number=0)
+    lesion = psma_lesion_factory(number=2)
     entry = psma_form_factory("ABC001", lesions=[lesion])
     api_client.post(reverse("psma-entry"), data=entry, format="json")
     # Always a new entry
     assert Patient.objects.count() == 1
     assert PsmaEntry.objects.count() == 1, entry
     assert PsmaLesion.objects.count() == 1, entry
-    assert PiradLocation.objects.count() == 0, entry
+    assert PiradLocation.objects.count() == 2, entry
+
+    another = psma_form_factory("ABC002", lesions=[lesion])
+    api_client.post(reverse("psma-entry"), data=another, format="json")
+
+    assert Patient.objects.count() == 2
+    assert PsmaEntry.objects.count() == 2, entry
+    assert PsmaLesion.objects.count() == 2, entry
+    assert PiradLocation.objects.count() == 2, entry
 
 
 def test_pathology_entry_serializer(pathology_form_factory, pathology_lesion_factory):

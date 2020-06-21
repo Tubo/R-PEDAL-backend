@@ -38,19 +38,14 @@ class PsmaLesionAdmin(admin.TabularInline):
 
 @admin.register(PsmaEntry)
 class PsmaEntryAdmin(admin.ModelAdmin):
-    list_display = [
-        "patient",
-        "psma_date",
-        "lesion_num",
-        "comments",
-        "timestamp"
-    ]
+    list_display = ["patient", "psma_date", "lesion_num", "comments", "timestamp"]
     inlines = [PsmaLesionAdmin]
 
     def lesion_num(self, e):
         return e.lesions.count()
 
     lesion_num.short_description = "Number of lesions"
+
 
 class PathologyLesionAdmin(admin.TabularInline):
     model = PathologyLesion
@@ -66,7 +61,7 @@ class PathologyAdmin(admin.ModelAdmin):
         "lesion_num",
         "specimen_type",
         "comments",
-        "timestamp"
+        "timestamp",
     ]
     inlines = [PathologyLesionAdmin]
 
@@ -75,5 +70,26 @@ class PathologyAdmin(admin.ModelAdmin):
 
     lesion_num.short_description = "Number of lesions"
 
-admin.site.register(PiradLocation)
+
+@admin.register(PiradLocation)
+class PiradLocationAdmin(admin.ModelAdmin):
+    list_display = [
+        "label",
+        "mri_lesion_count",
+        "psma_lesion_count",
+    ]
+
+    ordering = ["label"]
+
+    def mri_lesion_count(self, e):
+        return e.mrilesion_set.count()
+
+    mri_lesion_count.short_description = "Number of MRI lesions"
+
+    def psma_lesion_count(self, e):
+        return e.psmalesion_set.count()
+
+    psma_lesion_count.short_description = "Number of PSMA lesions"
+
+
 admin.site.register(Patient)
